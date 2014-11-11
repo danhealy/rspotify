@@ -17,7 +17,7 @@ module RSpotify
     #           user = RSpotify::Base.find('wizzler', 'user')
     #           user.class #=> RSpotify::User
     #           user.id    #=> "wizzler"
-    #           
+    #
     #           ids = %w(2UzMpPKPhbcC8RbsmuURAZ 7Jzsc04YpkRwB1zeyM39wE)
     #           tracks = RSpotify::Base.find(ids, 'track')
     #           tracks.class       #=> Array
@@ -69,7 +69,9 @@ module RSpotify
     #
     #           albums = RSpotify::Base.search('AM', 'album', limit: 10)
     #           albums.size #=> 10
-    def self.search(query, types, limit: 20, offset: 0)
+    def self.search(query, types, options = {limit: 20, offset: 0})
+      limit = options[:limit] || 20
+      offset = options[:offset] || 0
       types.gsub!(/\s+/, '')
 
       json = RSpotify.get 'search',
@@ -96,7 +98,7 @@ module RSpotify
 
     # When an object is obtained undirectly, Spotify usually returns a simplified version of it.
     # This method updates it into a full object, with all attributes filled.
-    # 
+    #
     # @note It is seldom necessary to use this method explicitly, since RSpotify takes care of it automatically when needed (see {#method_missing})
     #
     # @example

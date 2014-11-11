@@ -71,7 +71,8 @@ module RSpotify
     #
     #           playlist.add_tracks!(tracks, position: 20)
     #           playlist.tracks[20].name #=> "Somebody That I Used To Know"
-    def add_tracks!(tracks, position: nil)
+    def add_tracks!(tracks, options = {position: nil})
+      position = options[:position]
       track_uris = tracks.map(&:uri).join(',')
       url = @href + "/tracks?uris=#{track_uris}"
       url << "&position=#{position}" if position
@@ -96,7 +97,7 @@ module RSpotify
     #
     #           playlist.name   #=> "Movie Tracks"
     #           playlist.public #=> false
-    def change_details!(**data)
+    def change_details!(data = {}) # FIXME
       User.oauth_put(@owner.id, @href, data.to_json)
       data.each do |field, value|
         instance_variable_set("@#{field}", value)
@@ -127,7 +128,9 @@ module RSpotify
     # @example
     #           playlist = RSpotify::Playlist.find('wizzler', '00wHcTN0zQiun4xri9pmvX')
     #           playlist.tracks.first.name #=> "Main Theme from Star Wars - Instrumental"
-    def tracks(limit: 100, offset: 0)
+    def tracks(options = {limit: 100, offset: 0})
+      limit = options[:limit] || 20
+      offset = options[:offset] || 0
       last_track = offset + limit - 1
       if @tracks_cache && last_track < 100
         return @tracks_cache[offset..last_track]

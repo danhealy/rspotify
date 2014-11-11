@@ -22,7 +22,7 @@ module RSpotify
     #           track = RSpotify::Track.find('2UzMpPKPhbcC8RbsmuURAZ')
     #           track.class #=> RSpotify::Track
     #           track.name  #=> "Do I Wanna Know?"
-    #           
+    #
     #           ids = %w(2UzMpPKPhbcC8RbsmuURAZ 7Jzsc04YpkRwB1zeyM39wE)
     #           tracks = RSpotify::Base.find(ids, 'track')
     #           tracks.class       #=> Array
@@ -46,8 +46,10 @@ module RSpotify
     #
     #           tracks = RSpotify::Track.search('Thriller', limit: 10)
     #           tracks.size #=> 10
-    def self.search(query, limit: 20, offset: 0)
-      super(query, 'track', limit: limit, offset: offset)
+    def self.search(query, options = {limit: 20, offset: 0})
+      limit = options[:limit] || 20
+      offset = options[:offset] || 0
+      super(query, 'track', {limit: limit, offset: offset})
     end
 
     def initialize(options = {})
