@@ -97,7 +97,7 @@ module RSpotify
     #
     #           playlist.name   #=> "Movie Tracks"
     #           playlist.public #=> false
-    def change_details!(data = {}) # FIXME
+    def change_details!(data = {})
       User.oauth_put(@owner.id, @href, data.to_json)
       data.each do |field, value|
         instance_variable_set("@#{field}", value)
